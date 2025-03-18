@@ -63,3 +63,14 @@ void print_polygon(poligono p) {
         }
     glEnd();
 }
+
+void print_objects(draws &structure_list) {
+    for(int i = 0; i < structure_list.lista_pontos.size(); i++)
+        print_point(structure_list.lista_pontos[i]);
+    
+    for(int i = 0; i < structure_list.lista_retas.size(); i++)
+        print_line(structure_list.lista_retas[i]);
+    
+    for(int i = 0; i < structure_list.lista_poligonos.size(); i++)
+        print_polygon(structure_list.lista_poligonos[i]);
+}

@@ -8,5 +8,6 @@ int create_polygon(vector<ponto> vertices, draws &structure_list);
 void print_point(ponto p);
 void print_line(reta r);
 void print_polygon(poligono p);
+void print_objects(draws &structure_list);
 
 #endif
