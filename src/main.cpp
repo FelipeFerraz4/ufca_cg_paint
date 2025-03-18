@@ -13,11 +13,11 @@ void display(void){
 
     draws structure_list;
 
-    structure_list.lista_pontos.push_back({80, 60, {1.0, 0.0, 0.0}});
-    structure_list.lista_pontos.push_back({80, 90, {0.0, 0.0, 1.0}});
+    int index_p1 = create_ponto(80, 90, {0.0, 0.0, 1.0}, structure_list);
+    int index_p2 = create_ponto(80, 60, {1.0, 0.0, 0.0}, structure_list);
 
-    print_point(structure_list.lista_pontos[0]);
-    print_point(structure_list.lista_pontos[1]);
+    print_point(structure_list.lista_pontos[index_p1]);
+    print_point(structure_list.lista_pontos[index_p2]);
 
     glFlush();
 }
