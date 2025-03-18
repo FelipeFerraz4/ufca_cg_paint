@@ -1,16 +1,9 @@
 #include <vector>
 #include <stack>
 #include <cmath>
+#include "estruturas.h"
 
 using namespace std;
-
-struct ponto {
-    int x;
-    int y;
-};
-
-typedef vector<ponto> poligono;
-typedef stack<vector<vector<double>>> operacoes;
 
 vector<vector<double>> matrizRotacional(double theta) {
     vector<vector<double>> matriz(3, vector<double>(3));
