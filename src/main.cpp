@@ -16,10 +16,12 @@ void display(void){
     int index_p1 = create_point(80, 90, {1.0, 0.0, 0.0}, structure_list);
     int index_p2 = create_point(80, 60, {0.0, 0.0, 1.0}, structure_list);
     int index_l1 = create_line(100, 90, 100, 60, {1.0, 0.0, 0.0}, {0.0, 0.0, 1.0}, structure_list);
+    int index_pol1 = create_polygon({{120, 60, {0.0, 0.0, 1.0}}, {120, 90, {1.0, 0.0, 0.0}}, {140, 75, {0.0, 1.0, 0.0}}}, structure_list);
 
     print_point(structure_list.lista_pontos[index_p1]);
     print_point(structure_list.lista_pontos[index_p2]);
     print_line(structure_list.lista_retas[index_l1]);
+    print_polygon(structure_list.lista_poligonos[index_pol1]);
 
     glFlush();
 }
