@@ -10,6 +10,7 @@ using namespace std;
 struct ponto {
     int x;
     int y;
+    vector<float> cor = {0.0, 0.0, 0.0};
 };
 
 typedef vector<ponto> pontos;

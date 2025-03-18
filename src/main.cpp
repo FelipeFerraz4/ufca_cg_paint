@@ -4,17 +4,20 @@
 #include "primary_objects.h"
 #include "estruturas.h"
 
+// Para compilar:
 //g++ -o main main.cpp primary_objects.cpp estruturas.cpp -lfreeglut -lopengl32 -lglu32 -lm
 
 
 void display(void){
     glClear(GL_COLOR_BUFFER_BIT);
-    
-    ponto p1 = {80, 60};
-    ponto p2 = {80, 90};
-    glColor3f(0.0, 0.0, 1.0);
-    print_point(p1);
-    print_point(p2);
+
+    draws structure_list;
+
+    structure_list.lista_pontos.push_back({80, 60, {1.0, 0.0, 0.0}});
+    structure_list.lista_pontos.push_back({80, 90, {0.0, 0.0, 1.0}});
+
+    print_point(structure_list.lista_pontos[0]);
+    print_point(structure_list.lista_pontos[1]);
 
     glFlush();
 }
