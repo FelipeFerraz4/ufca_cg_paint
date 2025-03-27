@@ -7,7 +7,6 @@
 // Para compilar:
 //g++ -o main main.cpp primary_objects.cpp estruturas.cpp -lfreeglut -lopengl32 -lglu32 -lm
 
-
 void display(void){
     glClear(GL_COLOR_BUFFER_BIT);
 
@@ -46,5 +45,6 @@ int main(int argc, char *argv[]) {
     init();
     glutDisplayFunc(display);
     glutMainLoop();
+
     return 0;
 }
