@@ -12,6 +12,47 @@ extern pair<int, int> selectedObject;
 extern draws structure_list;
 extern vector<double> color;
 
+void translate(pair<int, int> selectedObject, int dx, int dy) {
+    int type = selectedObject.first;
+    int index = selectedObject.second;
+    if (type == 1) { // ponto
+        ponto &p = structure_list.lista_pontos[index];
+        vector<vector<double>> matrix = matrizTransacional(dx, dy);
+        calcular_novo_ponto(matrix, p);
+    } else if (type == 2) { // reta
+        reta &r = structure_list.lista_retas[index];
+        vector<vector<double>> matrix = matrizTransacional(dx, dy);
+        calcular_novo_ponto(matrix, r[0]);
+        calcular_novo_ponto(matrix, r[1]);
+    } else if (type == 3) { // poligono
+        poligono &p = structure_list.lista_poligonos[index];
+        vector<vector<double>> matrix = matrizTransacional(dx, dy);
+        for (ponto &pt : p) {
+            calcular_novo_ponto(matrix, pt);
+        }
+    }
+}
+
+void specialKeys(int key, int x, int y) {
+    if (mode == "translate" && selectedObject.first > 0) {
+        switch (key) {
+            case GLUT_KEY_LEFT:
+                translate(selectedObject, -10, 0);
+                break;
+            case GLUT_KEY_RIGHT:
+                translate(selectedObject, 10, 0);
+                break;
+            case GLUT_KEY_UP:
+                translate(selectedObject, 0, -10);
+                break;
+            case GLUT_KEY_DOWN:
+                translate(selectedObject, 0, 10);
+                break;
+        }
+    }
+    glutPostRedisplay();
+}
+
 void mouseFunc(int button, int state, int x, int y) {
     if (button == GLUT_LEFT_BUTTON && state == GLUT_UP) {
         if (mode == "create_point") {
