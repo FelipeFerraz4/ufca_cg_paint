@@ -36,21 +36,12 @@ void translate(pair<int, int> selectedObject, int dx, int dy) {
 void scale(pair<int, int> selectedObject, double scaleFactor) {
     int type = selectedObject.first;
     int index = selectedObject.second;
-    if (type == 1) { // ponto
-        ponto &p = structure_list.lista_pontos[index];
-        vector<vector<double>> matrix = matrizEscalar(scaleFactor, scaleFactor);
-        calcular_novo_ponto(matrix, p);
-    } else if (type == 2) { // reta
+    if (type == 2) {
         reta &r = structure_list.lista_retas[index];
-        vector<vector<double>> matrix = matrizEscalar(scaleFactor, scaleFactor);
-        calcular_novo_ponto(matrix, r[0]);
-        calcular_novo_ponto(matrix, r[1]);
-    } else if (type == 3) { // poligono
+        escalonar_r(r, scaleFactor, scaleFactor);
+    } else if (type == 3) {
         poligono &p = structure_list.lista_poligonos[index];
-        vector<vector<double>> matrix = matrizEscalar(scaleFactor, scaleFactor);
-        for (ponto &pt : p) {
-            calcular_novo_ponto(matrix, pt);
-        }
+        escalonar_p(p, scaleFactor, scaleFactor);
     }
 }
 
@@ -76,14 +67,14 @@ void keyboardFunc(unsigned char key, int x, int y) {
             mode = "translate";
             break;
         case '+':
-            if (modifiers == GLUT_ACTIVE_CTRL) {
-                scale(selectedObject, 1.1);
-            }
+            std::cout << "scale" << std::endl;
+            scale(selectedObject, 1.1);
+            glutPostRedisplay();
             break;
         case '-':
-            if (modifiers == GLUT_ACTIVE_CTRL) {
-                scale(selectedObject, 0.9);
-            }
+            std::cout << "scale" << std::endl;
+            scale(selectedObject, 0.9);
+            glutPostRedisplay();
             break;
         case 27: // ESC key to exit
             exit(0);
@@ -202,7 +193,7 @@ void mouseFunc(int button, int state, int x, int y) {
             glutPostRedisplay();
         }
         else if (mode == "select") {
-            selectedObject = selecionar_objeto(structure_list, x, y);
+            selectedObject = selecionar_objeto(structure_list, x, 300 - y);
             std::cout << selectedObject.first << " - " << selectedObject.second << std::endl;
         } 
         else if (mode == "delete") {

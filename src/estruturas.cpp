@@ -280,7 +280,7 @@ void rotacionar_p(poligono &p, double theta) {
 
     aux = 0;
     for(ponto n: p)
-        aux += n.x;
+        aux += n.y;
     double cent_y = aux / p.size();
 
     rot.push(matrizTransacional(-cent_x, -cent_y));
@@ -319,7 +319,7 @@ void escalonar_p(poligono &p, double Sx, double Sy) {
 
     aux = 0;
     for(ponto n: p)
-        aux += n.x;
+        aux += n.y;
     double cent_y = aux / p.size();
 
     esc.push(matrizTransacional(-cent_x, -cent_y));
