@@ -1,12 +1,9 @@
 #include <vector>
-#include <GL/glut.h>
-#include <GL/freeglut.h>
 #include "primary_objects.h"
 #include "estruturas.h"
 #include <iostream>
 #include <fstream>
 #include <stdio.h>
-#include <vector>
 #include <string>
 
 void save_objects(draws &structure_list) {
@@ -63,7 +60,7 @@ void save_objects(draws &structure_list) {
 
 }
 
-void save_objects(draws &structure_list){
+void load_objects(draws &structure_list){
     std::ifstream arquivo("save.txt");  // Abre o arquivo
     std::string linha;
     int modo = 1;
@@ -291,7 +288,7 @@ void save_objects(draws &structure_list){
                             if (linha[i] == ' ') {
                                 p1.cor[2] = std::stoi(str);
                                 str = "";
-                                nunV++;
+                                nunV = 1;
                                 listaDePontos.push_back(p1);
                             }
                             break;
