@@ -253,7 +253,7 @@ pair<int, int> selecionar_objeto(draws &d, double mx, double my) {
     return {0, 0};
 }
 
-void rotacionar(reta &r, double theta) {
+void rotacionar_r(reta &r, double theta) {
 
     operacoes rot;
 
@@ -270,7 +270,7 @@ void rotacionar(reta &r, double theta) {
     calcular_novo_ponto(matriz, r[1]);
 }
 
-void rotacionar(poligono &p, double theta) {
+void rotacionar_p(poligono &p, double theta) {
     operacoes rot;
 
     double aux = 0;
@@ -293,7 +293,7 @@ void rotacionar(poligono &p, double theta) {
         calcular_novo_ponto(matriz, p[i]);
 }
 
-void escalonar(reta &r, double Sx, double Sy) {
+void escalonar_r(reta &r, double Sx, double Sy) {
     operacoes esc;
 
     double cent_x = (r[0].x + r[1].x) / 2;
@@ -310,7 +310,7 @@ void escalonar(reta &r, double Sx, double Sy) {
 
 }
 
-void escalonar(poligono &p, double Sx, double Sy) {
+void escalonar_p(poligono &p, double Sx, double Sy) {
     operacoes esc;
 
     double aux = 0;

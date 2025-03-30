@@ -44,7 +44,7 @@ int calcular_regiao(ponto &p, double mx, double my, int t);
 bool selecionar_reta(reta &r, double mx, double my, int t);
 bool selecionar_area(poligono &p, double mx, double my);
 pair<int, int> selecionar_objeto(draws &d, double mx, double my);
-void rotacionar(reta &r, double theta);
-void rotacionar(poligono &p, double theta);
+void rotacionar_r(reta &r, double theta);
+void rotacionar_p(poligono &p, double theta);
 
 #endif
