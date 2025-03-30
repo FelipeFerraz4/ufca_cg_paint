@@ -307,7 +307,6 @@ void escalonar_r(reta &r, double Sx, double Sy) {
     
     calcular_novo_ponto(matriz, r[0]);
     calcular_novo_ponto(matriz, r[1]);
-
 }
 
 void escalonar_p(poligono &p, double Sx, double Sy) {

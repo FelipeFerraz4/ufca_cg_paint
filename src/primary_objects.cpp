@@ -3,6 +3,7 @@
 #include <GL/freeglut.h>
 #include "primary_objects.h"
 #include "estruturas.h"
+#include <iostream>
 
 using namespace std;
 
@@ -65,6 +66,10 @@ void print_polygon(poligono p) {
 }
 
 void print_objects(draws &structure_list) {
+    // std::cout << structure_list.lista_pontos.size() << std::endl;
+    // std::cout << structure_list.lista_retas.size() << std::endl;
+    // std::cout << structure_list.lista_poligonos.size() << std::endl;
+
     for(int i = 0; i < structure_list.lista_pontos.size(); i++)
         print_point(structure_list.lista_pontos[i]);
     

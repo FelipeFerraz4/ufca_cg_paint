@@ -10,16 +10,17 @@
 //g++ -o main main.cpp primary_objects.cpp estruturas.cpp user_interaction.cpp -lfreeglut -lopengl32 -lglu32 -lm
 
 string mode = "create_point";
-int selectedObject = -1;
+pair<int, int> selectedObject = {0, 0};
 draws structure_list;
+vector<double> color = {0.0, 0.0, 0.0};
 
 void display(void){
     glClear(GL_COLOR_BUFFER_BIT);
 
-    int index_p1 = create_point(80, 90, {1.0, 0.0, 0.0}, structure_list);
-    int index_p2 = create_point(80, 60, {0.0, 0.0, 1.0}, structure_list);
-    int index_l1 = create_line(100, 90, 100, 60, {1.0, 0.0, 0.0}, {0.0, 0.0, 1.0}, structure_list);
-    int index_pol1 = create_polygon({{120, 60, {0.0, 0.0, 1.0}}, {120, 90, {1.0, 0.0, 0.0}}, {140, 75, {0.0, 1.0, 0.0}}}, structure_list);
+    // int index_p1 = create_point(80, 90, {1.0, 0.0, 0.0}, structure_list);
+    // int index_p2 = create_point(80, 60, {0.0, 0.0, 1.0}, structure_list);
+    // int index_l1 = create_line(100, 90, 100, 60, {1.0, 0.0, 0.0}, {0.0, 0.0, 1.0}, structure_list);
+    // int index_pol1 = create_polygon({{120, 60, {0.0, 0.0, 1.0}}, {120, 90, {1.0, 0.0, 0.0}}, {140, 75, {0.0, 1.0, 0.0}}}, structure_list);
     
     print_objects(structure_list);
 
@@ -27,10 +28,10 @@ void display(void){
 }
 
 int init(void){
-    glClearColor(0.0, 0.0, 0.0,0.0);
+    glClearColor(1.0, 1.0, 1.0,0.0);
 
     glMatrixMode(GL_PROJECTION);
-    gluOrtho2D(0.0, 250.0, 0.0, 150.0);
+    gluOrtho2D(0.0, 500.0, 0.0, 300.0);
     return 0;
 }
 
@@ -43,7 +44,7 @@ int main(int argc, char *argv[]) {
 
     init();
     glutDisplayFunc(display);
-    // glutMouseFunc(mouseFunc);
+    glutMouseFunc(mouseFunc);
     // glutKeyboardFunc(keyboardFunc);
     // glutSpecialFunc(specialKeys);
 

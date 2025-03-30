@@ -46,5 +46,7 @@ bool selecionar_area(poligono &p, double mx, double my);
 pair<int, int> selecionar_objeto(draws &d, double mx, double my);
 void rotacionar_r(reta &r, double theta);
 void rotacionar_p(poligono &p, double theta);
+void escalonar_r(reta &r, double Sx, double Sy);
+void escalonar_p(poligono &p, double Sx, double Sy);
 
 #endif
