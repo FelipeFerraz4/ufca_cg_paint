@@ -3,10 +3,11 @@
 #include <GL/freeglut.h>
 #include "primary_objects.h"
 #include "estruturas.h"
+#include <iostream>
 
 using namespace std;
 
-int create_point(int x, int y, vector<float> cor, draws &structure_list) {
+int create_point(int x, int y, vector<double> cor, draws &structure_list) {
     ponto p;
     p.x = x;
     p.y = y;
@@ -15,7 +16,7 @@ int create_point(int x, int y, vector<float> cor, draws &structure_list) {
     return structure_list.lista_pontos.size() - 1;
 }
 
-int create_line(int x1, int y1, int x2, int y2, vector<float> cor1, vector<float> cor2, draws &structure_list) {
+int create_line(int x1, int y1, int x2, int y2, vector<double> cor1, vector<double> cor2, draws &structure_list) {
     ponto p1, p2;
 
     p1.x = x1;
@@ -65,6 +66,10 @@ void print_polygon(poligono p) {
 }
 
 void print_objects(draws &structure_list) {
+    // std::cout << structure_list.lista_pontos.size() << std::endl;
+    // std::cout << structure_list.lista_retas.size() << std::endl;
+    // std::cout << structure_list.lista_poligonos.size() << std::endl;
+
     for(int i = 0; i < structure_list.lista_pontos.size(); i++)
         print_point(structure_list.lista_pontos[i]);
     
