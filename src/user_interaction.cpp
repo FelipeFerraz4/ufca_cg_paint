@@ -6,6 +6,7 @@
 #include "user_interaction.h"
 #include <string>
 #include <iostream>
+#include <cmath>
 
 extern string mode;
 extern pair<int, int> selectedObject;
@@ -45,6 +46,19 @@ void scale(pair<int, int> selectedObject, double scaleFactor) {
     }
 }
 
+void rotate(pair<int, int> selectedObject, double angle) {
+    int type = selectedObject.first;
+    int index = selectedObject.second;
+    double radians = angle * M_PI / 180.0;
+    if (type == 2) {
+        reta &r = structure_list.lista_retas[index];
+        rotacionar_r(r, radians);
+    } else if (type == 3) {
+        poligono &p = structure_list.lista_poligonos[index];
+        rotacionar_p(p, radians);
+    }
+}
+
 void keyboardFunc(unsigned char key, int x, int y) {
     int modifiers = glutGetModifiers();
     switch (key) {
@@ -66,15 +80,28 @@ void keyboardFunc(unsigned char key, int x, int y) {
         case 't':
             mode = "translate";
             break;
+        case 'r': 
+            mode = "rotate"; 
+            break;
+        case '[':  // Rotação anti-horária
+            if (mode == "rotate") {
+                std::cout << "Rotacionando -10 graus" << std::endl;
+                rotate(selectedObject, -10);
+            }
+            break;
+        case ']':  // Rotação horária
+            if (mode == "rotate") {
+                std::cout << "Rotacionando +10 graus" << std::endl;
+                rotate(selectedObject, 10);
+            }
+            break;
         case '+':
             std::cout << "scale" << std::endl;
             scale(selectedObject, 1.1);
-            glutPostRedisplay();
             break;
         case '-':
             std::cout << "scale" << std::endl;
             scale(selectedObject, 0.9);
-            glutPostRedisplay();
             break;
         case 27: // ESC key to exit
             exit(0);
