@@ -77,8 +77,8 @@ void mouseFunc(int button, int state, int x, int y) {
             glutPostRedisplay();
         }
         else if (mode == "create_line") {
-            std::cout << "Antes" << structure_list.lista_pontos.size() << std::endl;
-            std::cout << "Antes" << x << " - " << 300 - y << std::endl;
+            // std::cout << "Antes" << structure_list.lista_pontos.size() << std::endl;
+            // std::cout << "Antes" << x << " - " << 300 - y << std::endl;
             static int x1, y1;
             static int index;
             static bool firstClick = true;
@@ -93,7 +93,29 @@ void mouseFunc(int button, int state, int x, int y) {
                 structure_list.lista_pontos.erase(structure_list.lista_pontos.begin() + index);
                 firstClick = true;
             }
-            std::cout << "Depois" << structure_list.lista_pontos.size() << std::endl;
+            // std::cout << "Depois" << structure_list.lista_pontos.size() << std::endl;
+            glutPostRedisplay();
+        }
+        else if (mode == "create_triangle") {
+            static vector<ponto> vertices;
+            static vector<int> index;
+            
+            ponto new_point;
+            new_point.x = x;
+            new_point.y = 300 - y;
+            new_point.cor = color;
+
+            index.push_back(create_point(x, 300 - y, color, structure_list));
+            vertices.push_back(new_point);
+        
+            if (vertices.size() == 3) {
+                create_polygon(vertices, structure_list);
+                for (int i = 0; i < index.size(); i++) {
+                    structure_list.lista_pontos.erase(structure_list.lista_pontos.begin() + index[i]);
+                }
+                vertices.clear();
+                index.clear();
+            }
             glutPostRedisplay();
         }
         // else if (mode == "create_polygon") {
@@ -130,13 +152,24 @@ void menu(int option) {
         case 16:  break;
         case 17:  break;
         case 18:  break;
-
+        case 19: mode = "create_triangle"; break;
+        case 20: mode = "create_rectangle"; break;
+        // case 21: mode = "create_circle"; break;
         case 11: exit(0); break;
     }
     glutPostRedisplay();
 }
 
 void createMenu() {
+    int createSubMenu = glutCreateMenu(menu);
+    glutAddMenuEntry("--- Criar ---", 0);
+    glutAddMenuEntry("Criar Ponto", 1);
+    glutAddMenuEntry("Criar Linha", 2);
+    glutAddMenuEntry("Criar Triangulo", 19);
+    glutAddMenuEntry("Criar Retangulo", 20);
+    // glutAddMenuEntry("Criar Circulo", 21);
+    glutAddMenuEntry("Criar Poligono", 3);
+
     int colorSubMenu = glutCreateMenu(menu);
     glutAddMenuEntry("---- Cores ----", 0);
     glutAddMenuEntry("Vermelho", 14);
@@ -147,9 +180,7 @@ void createMenu() {
 
     int menuID = glutCreateMenu(menu);
     glutAddMenuEntry("---------- MENU ----------", 0);
-    glutAddMenuEntry("Criar Ponto", 1);
-    glutAddMenuEntry("Criar Linha", 2);
-    glutAddMenuEntry("Criar Poligono", 3);
+    glutAddSubMenu("Criar", createSubMenu);
     glutAddMenuEntry("Selecionar", 4);
     glutAddMenuEntry("Excluir", 5);
 
