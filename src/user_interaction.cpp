@@ -8,67 +8,9 @@
 #include <iostream>
 
 extern string mode;
-extern int selectedObject;
+extern pair<int, int> selectedObject;
 extern draws structure_list;
 extern vector<double> color;
-
-// void keyboardFunc(unsigned char key, int x, int y) {
-//     int modifiers = glutGetModifiers();
-//     switch (key) {
-//         case 'p': 
-//             mode = "create_point";
-//             break;
-//         case 'l':
-//             mode = "create_line";
-//             break;
-//         case 'g':
-//             mode = "create_polygon";
-//             break;
-//         case 's':
-//             mode = "select";
-//             break;
-//         case 'd':
-//             mode = "delete";
-//             break;
-//         case 't':
-//             mode = "transformation";
-//             break;
-//         case '+':
-//             if (modifiers == GLUT_ACTIVE_CTRL) {
-//                 scale(selectedObject, 1.1);
-//             }
-//             break;
-//         case '-':
-//             if (modifiers == GLUT_ACTIVE_CTRL) {
-//                 scale(selectedObject, 0.9);
-//             }
-//             break;
-//         case 27: // ESC key to exit
-//             exit(0);
-//             break;
-//     }
-//     glutPostRedisplay();
-// }
-
-// void specialKeys(int key, int x, int y) {
-//     if (mode == "transformation" && selectedObject != -1) {
-//         switch (key) {
-//             case GLUT_KEY_LEFT:
-//                 translate(selectedObject, -10, 0);
-//                 break;
-//             case GLUT_KEY_RIGHT:
-//                 translate(selectedObject, 10, 0);
-//                 break;
-//             case GLUT_KEY_UP:
-//                 translate(selectedObject, 0, -10);
-//                 break;
-//             case GLUT_KEY_DOWN:
-//                 translate(selectedObject, 0, 10);
-//                 break;
-//         }
-//     }
-//     glutPostRedisplay();
-// }
 
 void mouseFunc(int button, int state, int x, int y) {
     if (button == GLUT_LEFT_BUTTON && state == GLUT_UP) {
@@ -77,8 +19,6 @@ void mouseFunc(int button, int state, int x, int y) {
             glutPostRedisplay();
         }
         else if (mode == "create_line") {
-            // std::cout << "Antes" << structure_list.lista_pontos.size() << std::endl;
-            // std::cout << "Antes" << x << " - " << 300 - y << std::endl;
             static int x1, y1;
             static int index;
             static bool firstClick = true;
@@ -93,7 +33,6 @@ void mouseFunc(int button, int state, int x, int y) {
                 structure_list.lista_pontos.erase(structure_list.lista_pontos.begin() + index);
                 firstClick = true;
             }
-            // std::cout << "Depois" << structure_list.lista_pontos.size() << std::endl;
             glutPostRedisplay();
         }
         else if (mode == "create_triangle") {
@@ -118,15 +57,67 @@ void mouseFunc(int button, int state, int x, int y) {
             }
             glutPostRedisplay();
         }
-        // else if (mode == "create_polygon") {
-        //     create_polygon({{x, y, {1.0f, 0.0f, 0.0f}}}, structure_list);
-        // } 
-        // else if (mode == "select") {
-        //     pair<int, int> index = selecionar_objeto(structure_list, x, y);
-        //     selectedObject = index;
-        // } else if (mode == "delete") {
-        //     deleteObject(selectedObject);
-        // }
+        else if (mode == "create_rectangle") {
+            static vector<ponto> vertices;
+            static vector<int> index;
+            
+            ponto new_point;
+            new_point.x = x;
+            new_point.y = 300 - y;
+            new_point.cor = color;
+            
+            index.push_back(create_point(x, 300 - y, color, structure_list));
+            vertices.push_back(new_point);
+            
+            
+            if (vertices.size() == 2) {  
+                int x1 = min(vertices[0].x, vertices[1].x);
+                int y1 = min(vertices[0].y, vertices[1].y);
+                int x2 = max(vertices[0].x, vertices[1].x);
+                int y2 = max(vertices[0].y, vertices[1].y);
+                
+                vector<ponto> rect_vertices;
+        
+                ponto p1, p2, p3, p4;
+                
+                p1.x = x1; p1.y = y1; p1.cor = color;
+                p2.x = x2; p2.y = y1; p2.cor = color;
+                p3.x = x2; p3.y = y2; p3.cor = color;
+                p4.x = x1; p4.y = y2; p4.cor = color;
+        
+                rect_vertices.push_back(p2);
+                rect_vertices.push_back(p1);
+                rect_vertices.push_back(p4);
+                rect_vertices.push_back(p3);
+        
+                create_polygon(rect_vertices, structure_list);
+                
+                for (int i = 0; i < index.size(); i++) {
+                    structure_list.lista_pontos.erase(structure_list.lista_pontos.begin() + index[i]);
+                }
+        
+                vertices.clear();
+                index.clear();
+            }        
+            glutPostRedisplay();
+        }
+        else if (mode == "select") {
+            selectedObject = selecionar_objeto(structure_list, x, y);
+            std::cout << selectedObject.first << " - " << selectedObject.second << std::endl;
+        } 
+        else if (mode == "delete") {
+            if (selectedObject.first == 1) { 
+                structure_list.lista_pontos.erase(structure_list.lista_pontos.begin() + selectedObject.second);
+            } 
+            else if (selectedObject.first == 2) {
+                structure_list.lista_retas.erase(structure_list.lista_retas.begin() + selectedObject.second);
+            } 
+            else if (selectedObject.first == 3) {
+                structure_list.lista_poligonos.erase(structure_list.lista_poligonos.begin() + selectedObject.second);
+            }
+            selectedObject = {0, 0};
+            glutPostRedisplay();
+        }
     }
     glutPostRedisplay();
 }
