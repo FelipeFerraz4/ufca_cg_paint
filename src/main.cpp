@@ -45,8 +45,8 @@ int main(int argc, char *argv[]) {
     init();
     glutDisplayFunc(display);
     glutMouseFunc(mouseFunc);
-    // glutKeyboardFunc(keyboardFunc);
-    // glutSpecialFunc(specialKeys);
+    glutKeyboardFunc(keyboardFunc);
+    glutSpecialFunc(specialKeys);
 
     createMenu();
 

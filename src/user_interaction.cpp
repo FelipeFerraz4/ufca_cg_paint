@@ -33,6 +33,65 @@ void translate(pair<int, int> selectedObject, int dx, int dy) {
     }
 }
 
+void scale(pair<int, int> selectedObject, double scaleFactor) {
+    int type = selectedObject.first;
+    int index = selectedObject.second;
+    if (type == 1) { // ponto
+        ponto &p = structure_list.lista_pontos[index];
+        vector<vector<double>> matrix = matrizEscalar(scaleFactor, scaleFactor);
+        calcular_novo_ponto(matrix, p);
+    } else if (type == 2) { // reta
+        reta &r = structure_list.lista_retas[index];
+        vector<vector<double>> matrix = matrizEscalar(scaleFactor, scaleFactor);
+        calcular_novo_ponto(matrix, r[0]);
+        calcular_novo_ponto(matrix, r[1]);
+    } else if (type == 3) { // poligono
+        poligono &p = structure_list.lista_poligonos[index];
+        vector<vector<double>> matrix = matrizEscalar(scaleFactor, scaleFactor);
+        for (ponto &pt : p) {
+            calcular_novo_ponto(matrix, pt);
+        }
+    }
+}
+
+void keyboardFunc(unsigned char key, int x, int y) {
+    int modifiers = glutGetModifiers();
+    switch (key) {
+        case 'p': 
+            mode = "create_point";
+            break;
+        case 'l':
+            mode = "create_line";
+            break;
+        case 'g':
+            mode = "create_polygon";
+            break;
+        case 's':
+            mode = "select";
+            break;
+        case 'd':
+            mode = "delete";
+            break;
+        case 't':
+            mode = "translate";
+            break;
+        case '+':
+            if (modifiers == GLUT_ACTIVE_CTRL) {
+                scale(selectedObject, 1.1);
+            }
+            break;
+        case '-':
+            if (modifiers == GLUT_ACTIVE_CTRL) {
+                scale(selectedObject, 0.9);
+            }
+            break;
+        case 27: // ESC key to exit
+            exit(0);
+            break;
+    }
+    glutPostRedisplay();
+}
+
 void specialKeys(int key, int x, int y) {
     if (mode == "translate" && selectedObject.first > 0) {
         switch (key) {
