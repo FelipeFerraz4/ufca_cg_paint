@@ -137,16 +137,16 @@ void specialKeys(int key, int x, int y) {
     if (mode == "translate" && selectedObject.first > 0) {
         switch (key) {
             case GLUT_KEY_LEFT:
-                translate(selectedObject, 10, 0);
-                break;
-            case GLUT_KEY_RIGHT:
                 translate(selectedObject, -10, 0);
                 break;
+            case GLUT_KEY_RIGHT:
+                translate(selectedObject, 10, 0);
+                break;
             case GLUT_KEY_UP:
-                translate(selectedObject, 0, -10);
+                translate(selectedObject, 0, 10);
                 break;
             case GLUT_KEY_DOWN:
-                translate(selectedObject, 0, 10);
+                translate(selectedObject, 0, -10);
                 break;
         }
     }
