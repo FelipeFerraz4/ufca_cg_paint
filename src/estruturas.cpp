@@ -348,3 +348,54 @@ void escalonar_p(poligono &p, double Sx, double Sy) {
     for(int i = 0; i < p.size(); i++)
         calcular_novo_ponto(matriz, p[i]);
 }
+
+void reflect_p(poligono &p, string eixo) {
+    operacoes esc;
+
+    double aux = 0;
+    for(ponto n: p)
+        aux += n.x;
+    double cent_x = aux / p.size();
+
+    aux = 0;
+    for(ponto n: p)
+        aux += n.y;
+    double cent_y = aux / p.size();
+
+    esc.push(matrizTransacional(-cent_x, -cent_y));
+    esc.push(matrizReflexao(eixo));
+    esc.push(matrizTransacional(cent_x, cent_y));
+
+    vector<vector<double>> matriz = calcular_matriz(esc);
+
+    for(int i = 0; i < p.size(); i++)
+        calcular_novo_ponto(matriz, p[i]);
+}
+
+void reflect_r(reta &r, string eixo) {
+    operacoes esc;
+
+    double cent_x = (r[0].x + r[1].x) / 2;
+    double cent_y = (r[0].y + r[1].y) / 2;
+
+    esc.push(matrizTransacional(-cent_x, -cent_y));
+    esc.push(matrizReflexao(eixo));
+    esc.push(matrizTransacional(cent_x, cent_y));
+
+    vector<vector<double>> matriz = calcular_matriz(esc);
+    
+    calcular_novo_ponto(matriz, r[0]);
+    calcular_novo_ponto(matriz, r[1]);
+}
+
+void reflect_point(ponto &p, string eixo) {
+    operacoes esc;
+
+    esc.push(matrizTransacional(-p.x, -p.y));
+    esc.push(matrizReflexao(eixo));
+    esc.push(matrizTransacional(p.x, p.y));
+
+    vector<vector<double>> matriz = calcular_matriz(esc);
+    
+    calcular_novo_ponto(matriz, p);
+}

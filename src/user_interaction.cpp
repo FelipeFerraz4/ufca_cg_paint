@@ -65,20 +65,16 @@ void rotate(pair<int, int> selectedObject, double angle) {
 void reflect(pair<int, int> selectedObject, string eixo) {
     int type = selectedObject.first;
     int index = selectedObject.second;
-    vector<vector<double>> matrix = matrizReflexao(eixo);
 
     if (type == 1) { // ponto
         ponto &p = structure_list.lista_pontos[index];
-        calcular_novo_ponto(matrix, p);
+        reflect_point(p, eixo);
     } else if (type == 2) { // reta
         reta &r = structure_list.lista_retas[index];
-        calcular_novo_ponto(matrix, r[0]);
-        calcular_novo_ponto(matrix, r[1]);
+        reflect_r(r, eixo);
     } else if (type == 3) { // polígono
         poligono &p = structure_list.lista_poligonos[index];
-        for (ponto &pt : p) {
-            calcular_novo_ponto(matrix, pt);
-        }
+        reflect_p(p, eixo);
     }
 }
 

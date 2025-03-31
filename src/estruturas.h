@@ -50,5 +50,9 @@ void rotacionar_r(reta &r, double theta);
 void rotacionar_p(poligono &p, double theta);
 void escalonar_r(reta &r, double Sx, double Sy);
 void escalonar_p(poligono &p, double Sx, double Sy);
+void reflect_point(ponto &p, string eixo);
+void reflect_r(reta &r, string eixo);
+void reflect_p(poligono &p, string eixo);
+
 
 #endif
