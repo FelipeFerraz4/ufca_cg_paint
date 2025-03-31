@@ -3,6 +3,7 @@
 #include <cmath>
 #include <algorithm>
 #include "estruturas.h"
+#include "string"
 
 using namespace std;
 
@@ -122,6 +123,22 @@ vector<vector<double>> calcular_matriz(operacoes &pilha) {
     }
 
     return matriz;
+}
+
+vector<vector<double>> matrizReflexao(string eixo) {
+    vector<vector<double>> matrix(3, vector<double>(3, 0));
+    if (eixo == "x") {
+        matrix = {{1, 0, 0}, {0, -1, 0}, {0, 0, 1}};
+    } else if (eixo == "y") {
+        matrix = {{-1, 0, 0}, {0, 1, 0}, {0, 0, 1}};
+    } else if (eixo == "origem") {
+        matrix = {{-1, 0, 0}, {0, -1, 0}, {0, 0, 1}};
+    } else if (eixo == "y=x") {
+        matrix = {{0, 1, 0}, {1, 0, 0}, {0, 0, 1}};
+    } else if (eixo == "y=-x") {
+        matrix = {{0, -1, 0}, {-1, 0, 0}, {0, 0, 1}};
+    }
+    return matrix;
 }
 
 void calcular_novo_ponto(vector<vector<double>> &matriz, ponto &p) {

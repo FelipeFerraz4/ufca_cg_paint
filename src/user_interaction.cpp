@@ -7,6 +7,8 @@
 #include <string>
 #include <iostream>
 #include <cmath>
+#include "save_load.h"
+#include "animacao.h"
 
 extern string mode;
 extern pair<int, int> selectedObject;
@@ -16,16 +18,16 @@ extern vector<double> color;
 void translate(pair<int, int> selectedObject, int dx, int dy) {
     int type = selectedObject.first;
     int index = selectedObject.second;
-    if (type == 1) { // ponto
+    if (type == 1) {
         ponto &p = structure_list.lista_pontos[index];
         vector<vector<double>> matrix = matrizTransacional(dx, dy);
         calcular_novo_ponto(matrix, p);
-    } else if (type == 2) { // reta
+    } else if (type == 2) {
         reta &r = structure_list.lista_retas[index];
         vector<vector<double>> matrix = matrizTransacional(dx, dy);
         calcular_novo_ponto(matrix, r[0]);
         calcular_novo_ponto(matrix, r[1]);
-    } else if (type == 3) { // poligono
+    } else if (type == 3) {
         poligono &p = structure_list.lista_poligonos[index];
         vector<vector<double>> matrix = matrizTransacional(dx, dy);
         for (ponto &pt : p) {
@@ -56,6 +58,26 @@ void rotate(pair<int, int> selectedObject, double angle) {
     } else if (type == 3) {
         poligono &p = structure_list.lista_poligonos[index];
         rotacionar_p(p, radians);
+    }
+}
+
+void reflect(pair<int, int> selectedObject, string eixo) {
+    int type = selectedObject.first;
+    int index = selectedObject.second;
+    vector<vector<double>> matrix = matrizReflexao(eixo);
+
+    if (type == 1) { // ponto
+        ponto &p = structure_list.lista_pontos[index];
+        calcular_novo_ponto(matrix, p);
+    } else if (type == 2) { // reta
+        reta &r = structure_list.lista_retas[index];
+        calcular_novo_ponto(matrix, r[0]);
+        calcular_novo_ponto(matrix, r[1]);
+    } else if (type == 3) { // polígono
+        poligono &p = structure_list.lista_poligonos[index];
+        for (ponto &pt : p) {
+            calcular_novo_ponto(matrix, pt);
+        }
     }
 }
 
@@ -114,10 +136,10 @@ void specialKeys(int key, int x, int y) {
     if (mode == "translate" && selectedObject.first > 0) {
         switch (key) {
             case GLUT_KEY_LEFT:
-                translate(selectedObject, -10, 0);
+                translate(selectedObject, 10, 0);
                 break;
             case GLUT_KEY_RIGHT:
-                translate(selectedObject, 10, 0);
+                translate(selectedObject, -10, 0);
                 break;
             case GLUT_KEY_UP:
                 translate(selectedObject, 0, -10);
@@ -220,6 +242,7 @@ void mouseFunc(int button, int state, int x, int y) {
             glutPostRedisplay();
         }
         else if (mode == "select") {
+            selectedObject = {0, 0};
             selectedObject = selecionar_objeto(structure_list, x, 300 - y);
             std::cout << selectedObject.first << " - " << selectedObject.second << std::endl;
         } 
@@ -253,8 +276,8 @@ void menu(int option) {
         case 9: mode = "reflect"; break;
         case 10: mode = "shear"; break;
 
-        case 12:  break;
-        case 13:  break;
+        case 12: save_objects(structure_list); break;
+        case 13: load_objects(structure_list); break;
 
         case 14:  break;
         case 15:  break;
@@ -264,12 +287,25 @@ void menu(int option) {
         case 19: mode = "create_triangle"; break;
         case 20: mode = "create_rectangle"; break;
         // case 21: mode = "create_circle"; break;
+        case 21: reflect(selectedObject, "x"); break;
+        case 22: reflect(selectedObject, "y"); break;
+        case 23: reflect(selectedObject, "origem"); break;
+        case 24: reflect(selectedObject, "y=x"); break;
+        case 25: reflect(selectedObject, "y=-x"); break;
+        case 26: iniciarA(); break;
         case 11: exit(0); break;
     }
     glutPostRedisplay();
 }
 
 void createMenu() {
+    int reflectSubMenu = glutCreateMenu(menu);
+    glutAddMenuEntry("Eixo X", 21);
+    glutAddMenuEntry("Eixo Y", 22);
+    glutAddMenuEntry("Origem", 23);
+    glutAddMenuEntry("reta y = x", 24);
+    glutAddMenuEntry("reta y = -x", 25);
+
     int createSubMenu = glutCreateMenu(menu);
     glutAddMenuEntry("--- Criar ---", 0);
     glutAddMenuEntry("Criar Ponto", 1);
@@ -297,12 +333,13 @@ void createMenu() {
     glutAddMenuEntry("Translacao", 6);
     glutAddMenuEntry("Rotacao", 7);
     glutAddMenuEntry("Escala", 8);
-    glutAddMenuEntry("Reflexao", 9);
+    glutAddSubMenu("Reflexao", reflectSubMenu);
     glutAddMenuEntry("Cisalhamento", 10);
 
     glutAddMenuEntry("---- Arquivo ----", 0);
     glutAddMenuEntry("Salvar", 12);
     glutAddMenuEntry("Carregar", 13);
+    glutAddMenuEntry("Animando", 26);
 
     glutAddSubMenu("Alterar Cor", colorSubMenu);
 

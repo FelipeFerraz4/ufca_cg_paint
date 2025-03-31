@@ -1,7 +1,7 @@
 #include <GL/glut.h>
 #include <GL/freeglut.h>
 #include <iostream>
-
+#include "animacao.h"
 
 const int WINDOW_WIDTH = 500;
 const int WINDOW_HEIGHT = 300;
@@ -83,6 +83,7 @@ void update(int value) {
 
 void iniciarA(){
     while (fim == false){
+        std::cout << "Animacao..." << std::endl;
         glutDisplayFunc(drawSprite);
         glutTimerFunc(50, update, 0); 
     }

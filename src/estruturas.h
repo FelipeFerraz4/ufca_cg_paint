@@ -4,6 +4,7 @@
 #include <vector>
 #include <stack>
 #include <cmath>
+#include <string>
 
 using namespace std;
 
@@ -38,6 +39,7 @@ vector<vector<double>> matrizTransacional(int x, int y);
 vector<vector<double>> matrizEscalar(double Sx, double Sy);
 vector<vector<double>> matrizSizalhar(double S, bool vertical);
 vector<vector<double>> calcular_matriz(operacoes &pilha);
+vector<vector<double>> matrizReflexao(string eixo);
 void calcular_novo_ponto(vector<vector<double>> &matriz, ponto &p);
 bool selecionar_ponto(ponto &p, double mx, double my, int t);
 int calcular_regiao(ponto &p, double mx, double my, int t);
