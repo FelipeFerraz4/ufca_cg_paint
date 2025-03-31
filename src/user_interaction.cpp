@@ -66,13 +66,13 @@ void reflect(pair<int, int> selectedObject, string eixo) {
     int type = selectedObject.first;
     int index = selectedObject.second;
 
-    if (type == 1) { // ponto
+    if (type == 1) {
         ponto &p = structure_list.lista_pontos[index];
         reflect_point(p, eixo);
-    } else if (type == 2) { // reta
+    } else if (type == 2) { 
         reta &r = structure_list.lista_retas[index];
         reflect_r(r, eixo);
-    } else if (type == 3) { // polígono
+    } else if (type == 3) { 
         poligono &p = structure_list.lista_poligonos[index];
         reflect_p(p, eixo);
     }
@@ -280,11 +280,12 @@ void menu(int option) {
         case 12: save_objects(structure_list); break;
         case 13: load_objects(structure_list); break;
 
-        case 14:  break;
-        case 15:  break;
-        case 16:  break;
-        case 17:  break;
-        case 18:  break;
+        case 14: color = {1.0, 0.0, 0.0}; break;
+        case 15: color = {0.0, 1.0, 0.0}; break;
+        case 16: color = {0.0, 0.0, 1.0}; break;
+        case 17: color = {1.0, 1.0, 1.0}; break;
+        case 18: color = {0.0, 0.0, 0.0}; break;
+
         case 19: mode = "create_triangle"; break;
         case 20: mode = "create_rectangle"; break;
         // case 21: mode = "create_circle"; break;
@@ -294,6 +295,10 @@ void menu(int option) {
         case 24: reflect(selectedObject, "y=x"); break;
         case 25: reflect(selectedObject, "y=-x"); break;
         case 26: animete(); break;
+
+        case 27: color = {1.0, 1.0, 0.0}; break;
+        case 28: color = {0.0, 1.0, 1.0}; break;
+        case 29: color = {1.0, 0.0, 1.0}; break;
         case 11: exit(0); break;
     }
     glutPostRedisplay();
@@ -323,6 +328,9 @@ void createMenu() {
     glutAddMenuEntry("Azul", 16);
     glutAddMenuEntry("Branco", 17);
     glutAddMenuEntry("Preto", 18);
+    glutAddMenuEntry("Amarelo", 27);
+    glutAddMenuEntry("Ciano", 28);
+    glutAddMenuEntry("Magenta", 29);
 
     int menuID = glutCreateMenu(menu);
     glutAddMenuEntry("---------- MENU ----------", 0);
