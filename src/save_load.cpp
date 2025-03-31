@@ -179,24 +179,28 @@ void load_objects(draws &structure_list) {
                         if (!str.empty()) {
                             switch (nunV) {
                                 case 1:
-                                    p1.x = std::stoi(str);
+                                    p1.x = std::stod(str);
+                                    nunV++;
                                     break;
                                 case 2:
-                                    p1.y = std::stoi(str);
+                                    p1.y = std::stod(str);
+                                    nunV++;
                                     break;
                                 case 3:
-                                    p1.cor[0] = std::stoi(str);
+                                    p1.cor[0] = std::stod(str);
+                                    nunV++;
                                     break;
                                 case 4:
-                                    p1.cor[1] = std::stoi(str);
+                                    p1.cor[1] = std::stod(str);
+                                    nunV++;
                                     break;
                                 case 5:
-                                    p1.cor[2] = std::stoi(str);
+                                    p1.cor[2] = std::stod(str);
+                                    nunV = 1;
                                     p.push_back(p1);
                                     break;
                             }
                             str = "";
-                            nunV++;
                         }
                     }
                 }
