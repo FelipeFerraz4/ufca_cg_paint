@@ -14,6 +14,7 @@ extern string mode;
 extern pair<int, int> selectedObject;
 extern draws structure_list;
 extern vector<double> color;
+extern bool fim; 
 
 void translate(pair<int, int> selectedObject, int dx, int dy) {
     int type = selectedObject.first;
@@ -79,6 +80,10 @@ void reflect(pair<int, int> selectedObject, string eixo) {
             calcular_novo_ponto(matrix, pt);
         }
     }
+}
+
+void animete() {
+    fim = false;
 }
 
 void keyboardFunc(unsigned char key, int x, int y) {
@@ -292,7 +297,7 @@ void menu(int option) {
         case 23: reflect(selectedObject, "origem"); break;
         case 24: reflect(selectedObject, "y=x"); break;
         case 25: reflect(selectedObject, "y=-x"); break;
-        case 26: iniciarA(); break;
+        case 26: animete(); break;
         case 11: exit(0); break;
     }
     glutPostRedisplay();
