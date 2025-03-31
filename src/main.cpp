@@ -15,6 +15,7 @@ string mode = "create_point";
 pair<int, int> selectedObject = {0, 0};
 draws structure_list;
 vector<double> color = {0.0, 0.0, 0.0};
+bool inis = true;
 
 #include <GL/glut.h>
 #include <GL/freeglut.h>
@@ -104,13 +105,15 @@ void display(void){
 
     glutSwapBuffers();
 
-    // int index_p1 = create_point(80, 90, {1.0, 0.0, 0.0}, structure_list);
+    if(inis){
+        int index_p1 = create_point(-50, 90, {1.0, 0.0, 0.0}, structure_list);
+        inis = false;
+    }
     // int index_p2 = create_point(80, 60, {0.0, 0.0, 1.0}, structure_list);
     // int index_l1 = create_line(100, 90, 100, 60, {1.0, 0.0, 0.0}, {0.0, 0.0, 1.0}, structure_list);
     // int index_pol1 = create_polygon({{120, 60, {0.0, 0.0, 1.0}}, {120, 90, {1.0, 0.0, 0.0}}, {140, 75, {0.0, 1.0, 0.0}}}, structure_list);
     
     print_objects(structure_list);
-
     glFlush();
 }
 

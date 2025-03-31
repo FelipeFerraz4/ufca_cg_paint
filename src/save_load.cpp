@@ -114,50 +114,97 @@ void load_objects(draws &structure_list) {
 
             case 2: {
                 int x[2], y[2];
-                std::vector<double> cor1(3), cor2(3);
-                int nunV = 1;
-                int p = 0;
+                vector<double> cor1(3);
+                vector<double> cor2(3);
+                int nunV = 1;  // A variável que controla para qual variável o valor será alocado
+                int p = 0; // Marca qual dos dois pontos está sendo marcado
 
                 for (int i = 0; i < linha.length(); i++) {
-                    int numero = linha[i] - '0';
+                    int numero = linha[i] - '0';  // Isso converte o caractere para o número correspondente
                     if (numero >= 0 && numero <= 9) {
                         str = str + linha[i];
                     }
 
-                    if (linha[i] == ' ' || i == linha.length() - 1) { 
-                        if (!str.empty()) {
-                            switch (nunV) {
-                                case 1:
-                                    if (p == 0) x[0] = std::stoi(str);
-                                    else x[1] = std::stoi(str);
-                                    break;
-                                case 2:
-                                    if (p == 0) y[0] = std::stoi(str);
-                                    else y[1] = std::stoi(str);
-                                    break;
-                                case 3:
-                                    if (p == 0) cor1[0] = std::stoi(str);
-                                    else cor2[0] = std::stoi(str);
-                                    break;
-                                case 4:
-                                    if (p == 0) cor1[1] = std::stoi(str);
-                                    else cor2[1] = std::stoi(str);
-                                    break;
-                                case 5:
-                                    if (p == 0) cor1[2] = std::stoi(str);
-                                    else cor2[2] = std::stoi(str);
-                                    create_line(x[0], y[0], x[1], y[1], cor1, cor2, structure_list);
-                                    p++;
-                                    break;
+                    switch (nunV) {
+                        case 1:
+                            if (linha[i] == ' ') {
+                                if (p == 0) {
+                                    x[0] = std::stoi(str);
+                                    str = "";
+                                    nunV++;
+                                } else {
+                                    x[1] = std::stoi(str);
+                                    str = "";
+                                    nunV++;
+                                }
                             }
-                            str = "";
-                            nunV++;
-                        }
+                            break;
+
+                        case 2:
+                            if (linha[i] == ' ') {
+                                if (p == 0) {
+                                    y[0] = std::stoi(str);
+                                    str = "";
+                                    nunV++;
+                                } else {
+                                    y[1] = std::stoi(str);
+                                    str = "";
+                                    nunV++;
+                                }
+                            }
+                            break;
+
+                        case 3:
+                            if (linha[i] == ' ') {
+                                if (p == 0) {
+                                    cor1[0] = std::stoi(str);
+                                    str = "";
+                                    nunV++;
+                                } else {
+                                    cor2[0] = std::stoi(str);
+                                    str = "";
+                                    nunV++;
+                                }
+                            }
+                            break;
+
+                        case 4:
+                            if (linha[i] == ' ') {
+                                if (p == 0) {
+                                    cor1[1] = std::stoi(str);
+                                    str = "";
+                                    nunV++;
+                                } else {
+                                    cor2[1] = std::stoi(str);
+                                    str = "";
+                                    nunV++;
+                                }
+                            }
+                            break;
+
+                        case 5:
+                            if (linha[i] == ' ') {
+                                if (p == 0) {
+                                    cor1[2] = std::stoi(str);
+                                    str = "";
+                                    p++;
+                                    nunV = 1;
+                                } else {
+                                    cor2[2] = std::stoi(str);
+                                    str = "";
+                                    nunV++;
+                                    create_line(x[0], y[0], x[1], y[1], cor1, cor2, structure_list);
+                                }
+                            }
+                            break;
+
+                        default:
+                            printf("erro");
+                            break;
                     }
                 }
                 break;
             }
-
             case 3: {
                 poligono p;
                 ponto p1;
