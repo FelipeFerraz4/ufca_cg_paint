@@ -9,51 +9,48 @@
 void save_objects(draws &structure_list) {
 
     ofstream arquivo;
-    arquivo.open("save.txt");
+    // Salvando os pontos
     for (const ponto &p : structure_list.lista_pontos) {
         arquivo << p.x << " " << p.y << " ";  // Escreve as coordenadas
-        for (float c : p.cor) {
+        for (double c : p.cor) {
             arquivo << c << " ";  // Escreve os componentes de cor
         }
         arquivo << endl;  // Quebra de linha após cada ponto
     }
 
-    arquivo << "p"; //para identificar quando acaba
-    arquivo << endl;
-
-// Salvando as retas
+    // Salvando as retas
     for (const reta &r : structure_list.lista_retas) {
-        arquivo << r.p1.x << " " << r.p1.y << " ";  // Ponto inicial da reta
-        for (float c : r.p1.cor) {
-            arquivo << c << " ";  // Cor do ponto inicial
-        }
-
-        arquivo << r.p2.x << " " << r.p2.y << " ";  // Ponto final da reta
-        for (float c : r.p2.cor) {
-            arquivo << c << " ";  // Cor do ponto final
+        for (const ponto &p : r) {
+            arquivo << p.x << " " << p.y << " ";  // Escreve as coordenadas da reta
+            for (double c : p.cor) {
+                arquivo << c << " ";  // Escreve os componentes de cor
+            }
         }
         arquivo << endl;  // Quebra de linha após cada reta
     }
 
-    arquivo << "p";
-    arquivo << endl;
+    arquivo << "r" << endl;  // Identificador de fim das retas
 
+    // Salvando os polígonos
     // Salvando os polígonos
     for (const poligono &p : structure_list.lista_poligonos) {
         int i = 0;
-        for (const ponto &pt : p.pontos) {
-            int total_pontos = p.pontos.size(); // Checa quantos pontos tem
+        int total_pontos = p.size();  // Total de pontos no polígono
+        for (const ponto &pt : p) {
             arquivo << pt.x << " " << pt.y << " ";  // Coordenadas de cada ponto do polígono
-            for (float c : pt.cor) {
+            for (double c : pt.cor) {
                 arquivo << c << " ";  // Cor do ponto
             }
             i++;
-            if (i = total_pontos) {
-                arquivo << "f";
+            if (i == total_pontos) {  // Se for o último ponto
+                arquivo << "f";  // Identificador de fim do polígono
             }
         }
         arquivo << endl;  // Quebra de linha após o polígono
     }
+
+    arquivo << "p" << endl;  // Identificador de fim dos polígonos
+
 
     arquivo.close();
     
@@ -75,7 +72,7 @@ void load_objects(draws &structure_list){
         switch (modo) {
             case 1: {
                 int x, y;
-                float cor[3];
+                std::vector<double> c;
                 int nunV = 1;  // A variável que controla para qual variável o valor será alocado
 
                 for (int i = 0; i < linha.length(); i++) {
@@ -103,7 +100,7 @@ void load_objects(draws &structure_list){
 
                         case 3:
                             if (linha[i] == ' ') {
-                                cor[0] = std::stoi(str);
+                                c.push_back(std::stoi(str));
                                 str = "";
                                 nunV++;
                             }
@@ -111,7 +108,7 @@ void load_objects(draws &structure_list){
 
                         case 4:
                             if (linha[i] == ' ') {
-                                cor[1] = std::stoi(str);
+                                c.push_back(std::stoi(str));
                                 str = "";
                                 nunV++;
                             }
@@ -119,20 +116,15 @@ void load_objects(draws &structure_list){
 
                         case 5:
                             if (linha[i] == ' ') {
-                                cor[2] = std::stoi(str);
+                                c.push_back(std::stoi(str));
                                 str = "";
                                 nunV++;
-                                create_point(x,y, cor, &structure_list);
+                                create_point(x,y, c, structure_list);
+                                c.clear();
                             }
                             break;
 
                         default:
-                            printf("%d ", x);
-                            printf("%d ", y);
-                            for (int j = 0; j < 3; j++) {
-                                printf("%f ", cor[j]);
-                            }
-                            printf("\n");
                             break;
                     }
                 }
@@ -141,8 +133,8 @@ void load_objects(draws &structure_list){
 
             case 2: {
                 int x[2], y[2];
-                float cor1[3];
-                float cor2[3];
+                vector<double> cor1(3);
+                vector<double> cor2(3);
                 int nunV = 1;  // A variável que controla para qual variável o valor será alocado
                 int p = 0; // Marca qual dos dois pontos está sendo marcado
 
@@ -220,7 +212,7 @@ void load_objects(draws &structure_list){
                                     cor2[2] = std::stoi(str);
                                     str = "";
                                     nunV++;
-                                    create_line(x[0], y[0], x[1], y[1], cor1, cor2, &structure_list);
+                                    create_line(x[0], y[0], x[1], y[1], cor1, cor2, structure_list);
                                 }
                             }
                             break;
@@ -235,11 +227,10 @@ void load_objects(draws &structure_list){
 
             case 3:
                  {
-                pontos listaDePontos;
-                typedef std::vector<ponto> pontos;
+                poligono p;
                 ponto p1;
                 int x, y;
-                float cor[3];
+                vector<double> cor(3);
                 int nunV = 1;  // A variável que controla para qual variável o valor será alocado
 
                 for (int i = 0; i < linha.length(); i++) {
@@ -248,8 +239,7 @@ void load_objects(draws &structure_list){
                         str = str + linha[i];
                     }
                     if(linha[i] == 'f'){
-                        create_polygon(p1, &structure_list);
-                        free(p1);
+                        create_polygon(p, structure_list);
                     }
                     switch (nunV) {
                         case 1:
@@ -289,7 +279,7 @@ void load_objects(draws &structure_list){
                                 p1.cor[2] = std::stoi(str);
                                 str = "";
                                 nunV = 1;
-                                listaDePontos.push_back(p1);
+                                p.push_back(p1);
                             }
                             break;
 
