@@ -16,6 +16,10 @@ extern draws structure_list;
 extern vector<double> color;
 extern bool fim; 
 
+static vector<ponto> verticesPoligono;
+static vector<int> indexPoligono;
+static bool criandoPoligono = false;
+
 void translate(pair<int, int> selectedObject, int dx, int dy) {
     int type = selectedObject.first;
     int index = selectedObject.second;
@@ -91,6 +95,37 @@ void shear(pair<int, int> selectedObject, double S, bool vertical) {
     }
 }
 
+void finalizarPoligono() {
+    if (verticesPoligono.size() < 3) {
+        std::cout << "Erro: Um poligono precisa de pelo menos 3 pontos!\n";
+    } else {
+        create_polygon(verticesPoligono, structure_list);
+        for (int i = 0; i < indexPoligono.size(); i++) {
+            structure_list.lista_pontos.erase(structure_list.lista_pontos.begin() + indexPoligono[i]);
+        }
+        std::cout << "Poligono finalizado e salvo!\n";
+    }
+
+    verticesPoligono.clear();
+    indexPoligono.clear();
+    criandoPoligono = false;
+    glutPostRedisplay();
+}
+
+void delete_object(){
+    std::cout << "Deletado" << std::endl;
+    if (selectedObject.first == 1) { 
+        structure_list.lista_pontos.erase(structure_list.lista_pontos.begin() + selectedObject.second);
+    } 
+    else if (selectedObject.first == 2) {
+        structure_list.lista_retas.erase(structure_list.lista_retas.begin() + selectedObject.second);
+    } 
+    else if (selectedObject.first == 3) {
+        structure_list.lista_poligonos.erase(structure_list.lista_poligonos.begin() + selectedObject.second);
+    }
+    selectedObject = {0, 0};
+    glutPostRedisplay();
+}
 
 void animete() {
     fim = false;
@@ -105,14 +140,11 @@ void keyboardFunc(unsigned char key, int x, int y) {
         case 'l':
             mode = "create_line";
             break;
-        case 'g':
-            mode = "create_polygon";
-            break;
         case 's':
             mode = "select";
             break;
         case 'd':
-            mode = "delete";
+            delete_object();
             break;
         case '[':
             std::cout << "Rotacionando -10 graus" << std::endl;
@@ -250,18 +282,17 @@ void mouseFunc(int button, int state, int x, int y) {
             selectedObject = {0, 0};
             selectedObject = selecionar_objeto(structure_list, x, 300 - y);
             std::cout << selectedObject.first << " - " << selectedObject.second << std::endl;
-        } 
-        else if (mode == "delete") {
-            if (selectedObject.first == 1) { 
-                structure_list.lista_pontos.erase(structure_list.lista_pontos.begin() + selectedObject.second);
-            } 
-            else if (selectedObject.first == 2) {
-                structure_list.lista_retas.erase(structure_list.lista_retas.begin() + selectedObject.second);
-            } 
-            else if (selectedObject.first == 3) {
-                structure_list.lista_poligonos.erase(structure_list.lista_poligonos.begin() + selectedObject.second);
-            }
-            selectedObject = {0, 0};
+        }
+        else if (mode == "create_polygon") {
+            ponto new_point;
+            new_point.x = x;
+            new_point.y = 300 - y;
+            new_point.cor = color;
+
+            indexPoligono.push_back(create_point(x, 300 - y, color, structure_list));
+            verticesPoligono.push_back(new_point);
+
+            std::cout << "Ponto adicionado ao poligono: (" << x << ", " << 300 - y << ")\n";
             glutPostRedisplay();
         }
     }
@@ -272,9 +303,15 @@ void menu(int option) {
     switch (option) {
         case 1: mode = "create_point"; break;
         case 2: mode = "create_line"; break;
-        case 3: mode = "create_polygon"; break;
+        case 3: 
+            mode = "create_polygon"; 
+            verticesPoligono.clear();
+            indexPoligono.clear();
+            criandoPoligono = true;
+            std::cout << "Modo de criacao de poligono ativado.\n";
+            break;
         case 4: mode = "select"; break;
-        case 5: mode = "delete"; break;
+        case 5: delete_object(); break;
         case 6: mode = "translate"; break;
         case 7: mode = "rotate"; break;
         case 8: mode = "scale"; break;
@@ -311,6 +348,11 @@ void menu(int option) {
             std::cout << "Aplicando cisalhamento..." << std::endl; 
             shear(selectedObject, 0.2, true); 
             break;
+
+        case 31:
+            finalizarPoligono();
+            break;
+
         case 11: exit(0); break;
     }
     glutPostRedisplay();
@@ -331,7 +373,8 @@ void createMenu() {
     glutAddMenuEntry("Criar Triangulo", 19);
     glutAddMenuEntry("Criar Retangulo", 20);
     // glutAddMenuEntry("Criar Circulo", 21);
-    glutAddMenuEntry("Criar Poligono", 3);
+    glutAddMenuEntry("Criar Poligono Inicio", 3);
+    glutAddMenuEntry("Criar Poligono Fim", 31);
 
     int colorSubMenu = glutCreateMenu(menu);
     glutAddMenuEntry("---- Cores ----", 0);
