@@ -239,7 +239,7 @@ bool selecionar_area(poligono &p, double mx, double my) {
         }
     }
 
-    return qtd / 2 == 0;
+    return qtd % 2 == 1;
 }
 
 /*
