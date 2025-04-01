@@ -239,7 +239,7 @@ bool selecionar_area(poligono &p, double mx, double my) {
         }
     }
 
-    return qtd;
+    return qtd / 2 == 0;
 }
 
 /*
@@ -270,16 +270,13 @@ pair<int, int> selecionar_objeto(draws &d, double mx, double my) {
     return {0, 0};
 }
 
-void rotacionar_r(reta &r, double theta) {
+void rotacionar_r(reta &r, double theta, pair<double, double> centroide) {
 
     operacoes rot;
 
-    double cent_x = (r[0].x + r[1].x) / 2;
-    double cent_y = (r[0].y + r[1].y) / 2;
-
-    rot.push(matrizTransacional(-cent_x, -cent_y));
+    rot.push(matrizTransacional(-centroide.first, -centroide.second));
     rot.push(matrizRotacional(theta));
-    rot.push(matrizTransacional(cent_x, cent_y));
+    rot.push(matrizTransacional(centroide.first, centroide.second));
 
     vector<vector<double>> matriz = calcular_matriz(rot);
     
@@ -287,22 +284,12 @@ void rotacionar_r(reta &r, double theta) {
     calcular_novo_ponto(matriz, r[1]);
 }
 
-void rotacionar_p(poligono &p, double theta) {
+void rotacionar_p(poligono &p, double theta, pair<double, double> centroide) {
     operacoes rot;
 
-    double aux = 0;
-    for(ponto n: p)
-        aux += n.x;
-    double cent_x = aux / p.size();
-
-    aux = 0;
-    for(ponto n: p)
-        aux += n.y;
-    double cent_y = aux / p.size();
-
-    rot.push(matrizTransacional(-cent_x, -cent_y));
+    rot.push(matrizTransacional(-centroide.first, -centroide.second));
     rot.push(matrizRotacional(theta));
-    rot.push(matrizTransacional(cent_x, cent_y));
+    rot.push(matrizTransacional(centroide.first, centroide.second));
 
     vector<vector<double>> matriz = calcular_matriz(rot);
 
@@ -310,15 +297,12 @@ void rotacionar_p(poligono &p, double theta) {
         calcular_novo_ponto(matriz, p[i]);
 }
 
-void escalonar_r(reta &r, double Sx, double Sy) {
+void escalonar_r(reta &r, double Sx, double Sy, pair<double, double> centroide) {
     operacoes esc;
 
-    double cent_x = (r[0].x + r[1].x) / 2;
-    double cent_y = (r[0].y + r[1].y) / 2;
-
-    esc.push(matrizTransacional(-cent_x, -cent_y));
+    esc.push(matrizTransacional(-centroide.first, -centroide.second));
     esc.push(matrizEscalar(Sx, Sy));
-    esc.push(matrizTransacional(cent_x, cent_y));
+    esc.push(matrizTransacional(centroide.first, centroide.second));
 
     vector<vector<double>> matriz = calcular_matriz(esc);
     
@@ -326,22 +310,12 @@ void escalonar_r(reta &r, double Sx, double Sy) {
     calcular_novo_ponto(matriz, r[1]);
 }
 
-void escalonar_p(poligono &p, double Sx, double Sy) {
+void escalonar_p(poligono &p, double Sx, double Sy, pair<double, double> centroide) {
     operacoes esc;
 
-    double aux = 0;
-    for(ponto n: p)
-        aux += n.x;
-    double cent_x = aux / p.size();
-
-    aux = 0;
-    for(ponto n: p)
-        aux += n.y;
-    double cent_y = aux / p.size();
-
-    esc.push(matrizTransacional(-cent_x, -cent_y));
+    esc.push(matrizTransacional(-centroide.first, -centroide.second));
     esc.push(matrizEscalar(Sx, Sy));
-    esc.push(matrizTransacional(cent_x, cent_y));
+    esc.push(matrizTransacional(centroide.first, centroide.second));
 
     vector<vector<double>> matriz = calcular_matriz(esc);
 
@@ -349,22 +323,12 @@ void escalonar_p(poligono &p, double Sx, double Sy) {
         calcular_novo_ponto(matriz, p[i]);
 }
 
-void reflect_p(poligono &p, string eixo) {
+void reflect_p(poligono &p, string eixo, pair<double, double> centroide) {
     operacoes esc;
 
-    double aux = 0;
-    for(ponto n: p)
-        aux += n.x;
-    double cent_x = aux / p.size();
-
-    aux = 0;
-    for(ponto n: p)
-        aux += n.y;
-    double cent_y = aux / p.size();
-
-    esc.push(matrizTransacional(-cent_x, -cent_y));
+    esc.push(matrizTransacional(-centroide.first, -centroide.second));
     esc.push(matrizReflexao(eixo));
-    esc.push(matrizTransacional(cent_x, cent_y));
+    esc.push(matrizTransacional(centroide.first, centroide.second));
 
     vector<vector<double>> matriz = calcular_matriz(esc);
 
@@ -372,15 +336,12 @@ void reflect_p(poligono &p, string eixo) {
         calcular_novo_ponto(matriz, p[i]);
 }
 
-void reflect_r(reta &r, string eixo) {
+void reflect_r(reta &r, string eixo, pair<double, double> centroide) {
     operacoes esc;
 
-    double cent_x = (r[0].x + r[1].x) / 2;
-    double cent_y = (r[0].y + r[1].y) / 2;
-
-    esc.push(matrizTransacional(-cent_x, -cent_y));
+    esc.push(matrizTransacional(-centroide.first, -centroide.second));
     esc.push(matrizReflexao(eixo));
-    esc.push(matrizTransacional(cent_x, cent_y));
+    esc.push(matrizTransacional(centroide.first, centroide.second));
 
     vector<vector<double>> matriz = calcular_matriz(esc);
     
@@ -400,20 +361,12 @@ void reflect_point(ponto &p, string eixo) {
     calcular_novo_ponto(matriz, p);
 }
 
-void shear_p(poligono &p, double S, bool vertical) {
+void shear_p(poligono &p, double S, bool vertical, pair<double, double> centroide) {
     operacoes esc;
 
-    double aux_x = 0, aux_y = 0;
-    for (ponto n : p) {
-        aux_x += n.x;
-        aux_y += n.y;
-    }
-    double cent_x = aux_x / p.size();
-    double cent_y = aux_y / p.size();
-
-    esc.push(matrizTransacional(-cent_x, -cent_y));
+    esc.push(matrizTransacional(-centroide.first, -centroide.second));
     esc.push(matrizSizalhar(S, vertical));          
-    esc.push(matrizTransacional(cent_x, cent_y));
+    esc.push(matrizTransacional(centroide.first, centroide.second));
 
     vector<vector<double>> matriz = calcular_matriz(esc);
 
@@ -421,15 +374,12 @@ void shear_p(poligono &p, double S, bool vertical) {
         calcular_novo_ponto(matriz, p[i]);
 }
 
-void shear_l(reta &r, double S, bool vertical) {
+void shear_l(reta &r, double S, bool vertical, pair<double, double> centroide) {
     operacoes esc;
 
-    double cent_x = (r[0].x + r[1].x) / 2.0;
-    double cent_y = (r[0].y + r[1].y) / 2.0;
-
-    esc.push(matrizTransacional(-cent_x, -cent_y)); 
+    esc.push(matrizTransacional(-centroide.first, -centroide.second)); 
     esc.push(matrizSizalhar(S, vertical));          
-    esc.push(matrizTransacional(cent_x, cent_y));  
+    esc.push(matrizTransacional(centroide.first, centroide.second));  
 
     vector<vector<double>> matriz = calcular_matriz(esc);
 

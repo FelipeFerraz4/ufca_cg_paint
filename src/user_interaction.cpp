@@ -20,6 +20,8 @@ static vector<ponto> verticesPoligono;
 static vector<int> indexPoligono;
 static bool criandoPoligono = false;
 
+pair<double, double> centroide;
+
 void translate(pair<int, int> selectedObject, int dx, int dy) {
     int type = selectedObject.first;
     int index = selectedObject.second;
@@ -32,12 +34,25 @@ void translate(pair<int, int> selectedObject, int dx, int dy) {
         vector<vector<double>> matrix = matrizTransacional(dx, dy);
         calcular_novo_ponto(matrix, r[0]);
         calcular_novo_ponto(matrix, r[1]);
+
+        centroide.first = (r[0].x + r[1].x) / 2;
+        centroide.second = (r[0].y + r[1].y) / 2; 
     } else if (type == 3) {
         poligono &p = structure_list.lista_poligonos[index];
         vector<vector<double>> matrix = matrizTransacional(dx, dy);
         for (ponto &pt : p) {
             calcular_novo_ponto(matrix, pt);
         }
+
+        double somaX = 0.0;
+        double somaY = 0.0;
+        for(ponto &pt: p) {
+            somaX += pt.x;
+            somaY += pt.y; 
+        }
+
+        centroide.first = somaX / p.size();
+        centroide.second = somaY / p.size();
     }
 }
 
@@ -46,10 +61,10 @@ void scale(pair<int, int> selectedObject, double scaleFactor) {
     int index = selectedObject.second;
     if (type == 2) {
         reta &r = structure_list.lista_retas[index];
-        escalonar_r(r, scaleFactor, scaleFactor);
+        escalonar_r(r, scaleFactor, scaleFactor, centroide);
     } else if (type == 3) {
         poligono &p = structure_list.lista_poligonos[index];
-        escalonar_p(p, scaleFactor, scaleFactor);
+        escalonar_p(p, scaleFactor, scaleFactor, centroide);
     }
 }
 
@@ -59,10 +74,10 @@ void rotate(pair<int, int> selectedObject, double angle) {
     double radians = angle * M_PI / 180.0;
     if (type == 2) {
         reta &r = structure_list.lista_retas[index];
-        rotacionar_r(r, radians);
+        rotacionar_r(r, radians, centroide);
     } else if (type == 3) {
         poligono &p = structure_list.lista_poligonos[index];
-        rotacionar_p(p, radians);
+        rotacionar_p(p, radians, centroide);
     }
 }
 
@@ -75,10 +90,10 @@ void reflect(pair<int, int> selectedObject, string eixo) {
         reflect_point(p, eixo);
     } else if (type == 2) { 
         reta &r = structure_list.lista_retas[index];
-        reflect_r(r, eixo);
+        reflect_r(r, eixo, centroide);
     } else if (type == 3) { 
         poligono &p = structure_list.lista_poligonos[index];
-        reflect_p(p, eixo);
+        reflect_p(p, eixo, centroide);
     }
 }
 
@@ -88,10 +103,10 @@ void shear(pair<int, int> selectedObject, double S, bool vertical) {
 
     if (type == 2) {
         reta &r = structure_list.lista_retas[index];
-        shear_l(r, S, vertical);
+        shear_l(r, S, vertical, centroide);
     } else if (type == 3) {
         poligono &p = structure_list.lista_poligonos[index];
-        shear_p(p, S, vertical);
+        shear_p(p, S, vertical, centroide);
     }
 }
 
@@ -281,6 +296,23 @@ void mouseFunc(int button, int state, int x, int y) {
         else if (mode == "select") {
             selectedObject = {0, 0};
             selectedObject = selecionar_objeto(structure_list, x, 300 - y);
+
+            if(selectedObject.first == 2) {
+                centroide.first = (structure_list.lista_retas[selectedObject.second][0].x + structure_list.lista_retas[selectedObject.second][1].x) / 2;
+                centroide.second = (structure_list.lista_retas[selectedObject.second][0].y + structure_list.lista_retas[selectedObject.second][1].y) / 2;
+            } else if(selectedObject.first == 3) {
+                double somaX = 0.0;
+                double somaY = 0.0;
+
+                for(ponto &p: structure_list.lista_poligonos[selectedObject.second]) {
+                    somaX += p.x;
+                    somaY += p.y;
+                }
+
+                centroide.first = somaX / structure_list.lista_poligonos[selectedObject.second].size();
+                centroide.second = somaY / structure_list.lista_poligonos[selectedObject.second].size();
+            }
+
             std::cout << selectedObject.first << " - " << selectedObject.second << std::endl;
         }
         else if (mode == "create_polygon") {
