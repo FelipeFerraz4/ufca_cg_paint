@@ -71,8 +71,13 @@ void scale(pair<int, int> selectedObject, double scaleFactor) {
 void rotate(pair<int, int> selectedObject, double angle) {
     int type = selectedObject.first;
     int index = selectedObject.second;
-    double radians = angle * M_PI / 180.0;
-    if (type == 2) {
+    double radians = -1 * angle * M_PI / 180.0;
+    if (type == 1) {
+        ponto &p = structure_list.lista_pontos[index];
+        vector<vector<double>> matrix = matrizRotacional(radians/10);
+        calcular_novo_ponto(matrix, p);
+        std::cout << p.x << " - " << p.y << std::endl;
+    } else if (type == 2) {
         reta &r = structure_list.lista_retas[index];
         rotacionar_r(r, radians, centroide);
     } else if (type == 3) {
@@ -426,9 +431,9 @@ void createMenu() {
     glutAddMenuEntry("Excluir", 5);
 
     glutAddMenuEntry("---- Transformacoes ----", 0);
-    glutAddMenuEntry("Translacao", 6);
-    glutAddMenuEntry("Rotacao", 7);
-    glutAddMenuEntry("Escala", 8);
+    glutAddMenuEntry("Translacao => setas", 6);
+    glutAddMenuEntry("Rotacao => [ ou ]", 7);
+    glutAddMenuEntry("Escala => + e -", 8);
     glutAddSubMenu("Reflexao", reflectSubMenu);
     glutAddMenuEntry("Cisalhamento X", 10);
     glutAddMenuEntry("Cisalhamento Y", 30);
