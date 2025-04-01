@@ -53,6 +53,8 @@ void escalonar_p(poligono &p, double Sx, double Sy);
 void reflect_point(ponto &p, string eixo);
 void reflect_r(reta &r, string eixo);
 void reflect_p(poligono &p, string eixo);
+void shear_p(poligono &p, double S, bool vertical);
+void shear_l(reta &r, double S, bool vertical);
 
 
 #endif

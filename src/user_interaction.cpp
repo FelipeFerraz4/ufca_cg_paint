@@ -78,6 +78,20 @@ void reflect(pair<int, int> selectedObject, string eixo) {
     }
 }
 
+void shear(pair<int, int> selectedObject, double S, bool vertical) {
+    int type = selectedObject.first;
+    int index = selectedObject.second;
+
+    if (type == 2) {
+        reta &r = structure_list.lista_retas[index];
+        shear_l(r, S, vertical);
+    } else if (type == 3) {
+        poligono &p = structure_list.lista_poligonos[index];
+        shear_p(p, S, vertical);
+    }
+}
+
+
 void animete() {
     fim = false;
 }
@@ -100,23 +114,13 @@ void keyboardFunc(unsigned char key, int x, int y) {
         case 'd':
             mode = "delete";
             break;
-        case 't':
-            mode = "translate";
+        case '[':
+            std::cout << "Rotacionando -10 graus" << std::endl;
+            rotate(selectedObject, -10);
             break;
-        case 'r': 
-            mode = "rotate"; 
-            break;
-        case '[':  // Rotação anti-horária
-            if (mode == "rotate") {
-                std::cout << "Rotacionando -10 graus" << std::endl;
-                rotate(selectedObject, -10);
-            }
-            break;
-        case ']':  // Rotação horária
-            if (mode == "rotate") {
-                std::cout << "Rotacionando +10 graus" << std::endl;
-                rotate(selectedObject, 10);
-            }
+        case ']':
+            std::cout << "Rotacionando +10 graus" << std::endl;
+            rotate(selectedObject, 10);
             break;
         case '+':
             std::cout << "scale" << std::endl;
@@ -134,7 +138,7 @@ void keyboardFunc(unsigned char key, int x, int y) {
 }
 
 void specialKeys(int key, int x, int y) {
-    if (mode == "translate" && selectedObject.first > 0) {
+    if (selectedObject.first > 0) {
         switch (key) {
             case GLUT_KEY_LEFT:
                 translate(selectedObject, -10, 0);
@@ -275,7 +279,10 @@ void menu(int option) {
         case 7: mode = "rotate"; break;
         case 8: mode = "scale"; break;
         case 9: mode = "reflect"; break;
-        case 10: mode = "shear"; break;
+        case 10:
+            std::cout << "Aplicando cisalhamento..." << std::endl; 
+            shear(selectedObject, 0.2, false); 
+            break;
 
         case 12: save_objects(structure_list); break;
         case 13: load_objects(structure_list); break;
@@ -299,6 +306,11 @@ void menu(int option) {
         case 27: color = {1.0, 1.0, 0.0}; break;
         case 28: color = {0.0, 1.0, 1.0}; break;
         case 29: color = {1.0, 0.0, 1.0}; break;
+
+        case 30:
+            std::cout << "Aplicando cisalhamento..." << std::endl; 
+            shear(selectedObject, 0.2, true); 
+            break;
         case 11: exit(0); break;
     }
     glutPostRedisplay();
@@ -343,7 +355,8 @@ void createMenu() {
     glutAddMenuEntry("Rotacao", 7);
     glutAddMenuEntry("Escala", 8);
     glutAddSubMenu("Reflexao", reflectSubMenu);
-    glutAddMenuEntry("Cisalhamento", 10);
+    glutAddMenuEntry("Cisalhamento X", 10);
+    glutAddMenuEntry("Cisalhamento Y", 30);
 
     glutAddMenuEntry("---- Arquivo ----", 0);
     glutAddMenuEntry("Salvar", 12);

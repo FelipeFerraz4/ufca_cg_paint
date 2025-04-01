@@ -399,3 +399,40 @@ void reflect_point(ponto &p, string eixo) {
     
     calcular_novo_ponto(matriz, p);
 }
+
+void shear_p(poligono &p, double S, bool vertical) {
+    operacoes esc;
+
+    double aux_x = 0, aux_y = 0;
+    for (ponto n : p) {
+        aux_x += n.x;
+        aux_y += n.y;
+    }
+    double cent_x = aux_x / p.size();
+    double cent_y = aux_y / p.size();
+
+    esc.push(matrizTransacional(-cent_x, -cent_y));
+    esc.push(matrizSizalhar(S, vertical));          
+    esc.push(matrizTransacional(cent_x, cent_y));
+
+    vector<vector<double>> matriz = calcular_matriz(esc);
+
+    for (int i = 0; i < p.size(); i++)
+        calcular_novo_ponto(matriz, p[i]);
+}
+
+void shear_l(reta &r, double S, bool vertical) {
+    operacoes esc;
+
+    double cent_x = (r[0].x + r[1].x) / 2.0;
+    double cent_y = (r[0].y + r[1].y) / 2.0;
+
+    esc.push(matrizTransacional(-cent_x, -cent_y)); 
+    esc.push(matrizSizalhar(S, vertical));          
+    esc.push(matrizTransacional(cent_x, cent_y));  
+
+    vector<vector<double>> matriz = calcular_matriz(esc);
+
+    calcular_novo_ponto(matriz, r[0]);
+    calcular_novo_ponto(matriz, r[1]);
+}
