@@ -147,6 +147,24 @@ void delete_object(){
     glutPostRedisplay();
 }
 
+void gift_wrapping() {
+    if (selectedObject.first == 3) {
+        poligono &p = structure_list.lista_poligonos[selectedObject.second];
+        poligono convex_hull = gift_wrapping(p);
+        std::cout << "Convex Hull: " << convex_hull.size() << std::endl;
+        for (int i = 0; i < convex_hull.size(); i++) {
+            ponto &pt = convex_hull[i];
+            std::cout << pt.x << " - " << pt.y << std::endl;
+        }
+        create_polygon(convex_hull, structure_list);
+        structure_list.lista_poligonos.erase(structure_list.lista_poligonos.begin() + selectedObject.second);
+        selectedObject = {0, 0};
+        glutPostRedisplay();
+    } else {
+        std::cout << "Selecione um poligono para aplicar o gift wrapping!" << std::endl;
+    }
+}
+
 void animete() {
     fim = false;
 }
@@ -390,6 +408,10 @@ void menu(int option) {
             finalizarPoligono();
             break;
 
+        case 32:
+            gift_wrapping();
+            break;
+
         case 11: exit(0); break;
     }
     glutPostRedisplay();
@@ -403,16 +425,8 @@ void createMenu() {
     glutAddMenuEntry("reta y = x", 24);
     glutAddMenuEntry("reta y = -x", 25);
 
-    int createSubMenu = glutCreateMenu(menu);
-    glutAddMenuEntry("--- Criar ---", 0);
-    glutAddMenuEntry("Criar Ponto", 1);
-    glutAddMenuEntry("Criar Linha", 2);
-    glutAddMenuEntry("Criar Triangulo", 19);
-    glutAddMenuEntry("Criar Retangulo", 20);
-    // glutAddMenuEntry("Criar Circulo", 21);
-    glutAddMenuEntry("Criar Poligono Inicio", 3);
-    glutAddMenuEntry("Criar Poligono Fim", 31);
-
+    // int createSubMenu = glutCreateMenu(menu);
+    
     int colorSubMenu = glutCreateMenu(menu);
     glutAddMenuEntry("---- Cores ----", 0);
     glutAddMenuEntry("Vermelho", 14);
@@ -426,7 +440,15 @@ void createMenu() {
 
     int menuID = glutCreateMenu(menu);
     glutAddMenuEntry("---------- MENU ----------", 0);
-    glutAddSubMenu("Criar", createSubMenu);
+    // glutAddSubMenu("Criar", createSubMenu);
+    glutAddMenuEntry("--- Criar ---", 0);
+    glutAddMenuEntry("Criar Ponto", 1);
+    glutAddMenuEntry("Criar Linha", 2);
+    glutAddMenuEntry("Criar Triangulo", 19);
+    glutAddMenuEntry("Criar Retangulo", 20);
+    glutAddMenuEntry("Criar Poligono Inicio", 3);
+    glutAddMenuEntry("Criar Poligono Fim", 31);
+    glutAddMenuEntry("Transformar convexos", 32);
     glutAddMenuEntry("Selecionar", 4);
     glutAddMenuEntry("Excluir", 5);
 
