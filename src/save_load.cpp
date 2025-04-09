@@ -75,7 +75,7 @@ void load_objects(draws &structure_list) {
 
         switch (modo) {
             case 1: {
-                int x, y;
+                double x, y;
                 std::vector<double> c;
                 int nunV = 1;
 
@@ -89,17 +89,17 @@ void load_objects(draws &structure_list) {
                         if (!str.empty()) {  // Verifica se a string não está vazia antes de usar
                             switch (nunV) {
                                 case 1:
-                                    x = std::stoi(str);
+                                    x = std::stod(str);
                                     break;
                                 case 2:
-                                    y = std::stoi(str);
+                                    y = std::stod(str);
                                     break;
                                 case 3:
                                 case 4:
-                                    c.push_back(std::stoi(str));
+                                    c.push_back(std::stod(str));
                                     break;
                                 case 5:
-                                    c.push_back(std::stoi(str));
+                                    c.push_back(std::stod(str));
                                     create_point(x, y, c, structure_list);
                                     c.clear();
                                     break;
@@ -113,7 +113,7 @@ void load_objects(draws &structure_list) {
             }
 
             case 2: {
-                int x[2], y[2];
+                double x[2], y[2];
                 vector<double> cor1(3);
                 vector<double> cor2(3);
                 int nunV = 1;  // A variável que controla para qual variável o valor será alocado
@@ -129,11 +129,11 @@ void load_objects(draws &structure_list) {
                         case 1:
                             if (linha[i] == ' ') {
                                 if (p == 0) {
-                                    x[0] = std::stoi(str);
+                                    x[0] = std::stod(str);
                                     str = "";
                                     nunV++;
                                 } else {
-                                    x[1] = std::stoi(str);
+                                    x[1] = std::stod(str);
                                     str = "";
                                     nunV++;
                                 }
@@ -143,11 +143,11 @@ void load_objects(draws &structure_list) {
                         case 2:
                             if (linha[i] == ' ') {
                                 if (p == 0) {
-                                    y[0] = std::stoi(str);
+                                    y[0] = std::stod(str);
                                     str = "";
                                     nunV++;
                                 } else {
-                                    y[1] = std::stoi(str);
+                                    y[1] = std::stod(str);
                                     str = "";
                                     nunV++;
                                 }
@@ -157,11 +157,11 @@ void load_objects(draws &structure_list) {
                         case 3:
                             if (linha[i] == ' ') {
                                 if (p == 0) {
-                                    cor1[0] = std::stoi(str);
+                                    cor1[0] = std::stod(str);
                                     str = "";
                                     nunV++;
                                 } else {
-                                    cor2[0] = std::stoi(str);
+                                    cor2[0] = std::stod(str);
                                     str = "";
                                     nunV++;
                                 }
@@ -171,11 +171,11 @@ void load_objects(draws &structure_list) {
                         case 4:
                             if (linha[i] == ' ') {
                                 if (p == 0) {
-                                    cor1[1] = std::stoi(str);
+                                    cor1[1] = std::stod(str);
                                     str = "";
                                     nunV++;
                                 } else {
-                                    cor2[1] = std::stoi(str);
+                                    cor2[1] = std::stod(str);
                                     str = "";
                                     nunV++;
                                 }
@@ -185,12 +185,12 @@ void load_objects(draws &structure_list) {
                         case 5:
                             if (linha[i] == ' ') {
                                 if (p == 0) {
-                                    cor1[2] = std::stoi(str);
+                                    cor1[2] = std::stod(str);
                                     str = "";
                                     p++;
                                     nunV = 1;
                                 } else {
-                                    cor2[2] = std::stoi(str);
+                                    cor2[2] = std::stod(str);
                                     str = "";
                                     nunV++;
                                     create_line(x[0], y[0], x[1], y[1], cor1, cor2, structure_list);
@@ -208,7 +208,7 @@ void load_objects(draws &structure_list) {
             case 3: {
                 poligono p;
                 ponto p1;
-                int x, y;
+                double x, y;
                 std::vector<double> cor(3);
                 int nunV = 1;
 

@@ -257,7 +257,7 @@ pair<int, int> selecionar_objeto(draws &d, double mx, double my) {
     }
 
     for(int i = 0; i < d.lista_retas.size(); i++) {
-        if(selecionar_reta(d.lista_retas[i], mx, my, 5))
+        if(selecionar_reta(d.lista_retas[i], mx, my, 3))
             return {2, i};
     }
 
@@ -385,4 +385,46 @@ void shear_l(reta &r, double S, bool vertical, pair<double, double> centroide) {
 
     calcular_novo_ponto(matriz, r[0]);
     calcular_novo_ponto(matriz, r[1]);
+}
+
+int orientacao(ponto p1, ponto p2, ponto p3) {
+    double d = (p3.y - p2.y) * (p2.x - p1.x) - (p2.y - p1.y) * (p3.x - p2.x);
+
+    if(d > 0)
+        return 1;
+    if(d < 0)
+        return -1;
+    return 0;
+}
+
+double distancia(ponto p1, ponto p2) {
+    return sqrt(pow(p2.y - p1.y, 2) + pow(p2.x - p1.x, 2));
+}
+
+poligono gift_wrapping(poligono &p) {
+
+    ponto aux = *min_element(p.begin(), p.end(), [](ponto &a, ponto &b) {
+        return (a.x < b.x) || (a.x == b.x && a.y < b.y);
+    });
+
+    poligono saida;
+    while(true) {
+        saida.push_back(aux);
+        ponto proximo = p[0];
+
+        for(ponto &point: p) {
+            if(point.x == aux.x && point.y == aux.y)
+                continue;
+
+            int o = orientacao(aux, proximo, point);
+
+            if(proximo.x == aux.x && proximo.y == aux.y || 0 == 1 || (o == 0 && distancia(aux, point) > distancia(aux, proximo)))
+                proximo = point;
+        }
+        aux = proximo;
+        if(aux.x == saida[0].x && aux.y == saida[0].y)
+            break;
+    }
+
+    return saida;
 }

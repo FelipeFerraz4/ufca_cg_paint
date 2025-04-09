@@ -94,6 +94,7 @@ void display(void){
     glClear(GL_COLOR_BUFFER_BIT);
 
     glClear(GL_COLOR_BUFFER_BIT);
+    glPointSize(3);
 
     glBegin(GL_POINTS);
     for (int y = 0; y < SPRITE_HEIGHT; y++) {

@@ -55,6 +55,8 @@ void reflect_r(reta &r, string eixo, pair<double, double> centroide);
 void reflect_p(poligono &p, string eixo, pair<double, double> centroide);
 void shear_p(poligono &p, double S, bool vertical, pair<double, double> centroide);
 void shear_l(reta &r, double S, bool vertical, pair<double, double> centroide);
-
+int orientacao(ponto p1, ponto p2, ponto p3);
+double distancia(ponto p1, ponto p2);
+poligono gift_wrapping(poligono &p);
 
 #endif
