@@ -418,7 +418,7 @@ poligono gift_wrapping(poligono &p) {
 
             int o = orientacao(aux, proximo, point);
 
-            if(proximo.x == aux.x && proximo.y == aux.y || 0 == 1 || (o == 0 && distancia(aux, point) > distancia(aux, proximo)))
+            if(proximo.x == aux.x && proximo.y == aux.y || o == 1 || (o == 0 && distancia(aux, point) > distancia(aux, proximo)))
                 proximo = point;
         }
         aux = proximo;
